@@ -1,0 +1,75 @@
+
+    <div class="login-page">
+      <div class="login-left">
+        <div class="brand">
+          <div class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-9"/><path d="M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
+          </div>
+          <h1>JobPathway</h1>
+          <p>Your professional journey starts here. Connect with top employers and find opportunities that match your skills.</p>
+        </div>
+        <div class="features">
+          <div class="feature">
+            <div class="feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+            </div>
+            <div>
+              <strong>Smart Job Matching</strong>
+              <span>Find roles that align with your expertise</span>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div>
+              <strong>Professional Profiles</strong>
+              <span>Showcase your skills and experience</span>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <div>
+              <strong>Track Applications</strong>
+              <span>Monitor your application status in real time</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="login-right">
+        <div class="login-card animate-fade-in">
+          <h2>Welcome back</h2>
+          <p class="subtitle">Sign in to your account to continue</p>
+          <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+              <label class="label" for="email">Email address</label>
+              <input id="email" type="email" class="input-field" formControlName="email" placeholder="name@company.com" />
+              @if (form.controls.email.touched && form.controls.email.errors) {
+                <span class="error-text">Please enter a valid email address</span>
+              }
+            </div>
+            <div class="form-group">
+              <label class="label" for="password">Password</label>
+              <input id="password" type="password" class="input-field" formControlName="password" placeholder="Enter your password" />
+              @if (form.controls.password.touched && form.controls.password.errors) {
+                <span class="error-text">Password is required</span>
+              }
+            </div>
+            @if (errorMessage()) {
+              <div class="error-banner">{{ errorMessage() }}</div>
+            }
+            <button type="submit" class="btn-primary submit-btn" [disabled]="loading()">
+              @if (loading()) {
+                <span class="spinner-sm"></span>
+              }
+              Sign in
+            </button>
+          </form>
+          <p class="register-link">
+            Don't have an account? <a routerLink="/register">Create one</a>
+          </p>
+        </div>
+      </div>
+    </div>
