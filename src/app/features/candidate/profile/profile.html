@@ -1,0 +1,241 @@
+
+    @if (loading()) {
+      <app-loading-spinner />
+    } @else {
+      <div class="page animate-fade-in">
+        <div class="page-header">
+          <h1>My Profile</h1>
+          <p>Manage your professional information</p>
+        </div>
+
+        <!-- Profile Info -->
+        <div class="section card">
+          <div class="section-header">
+            <h2>Personal Information</h2>
+            @if (!editingProfile()) {
+              <button class="btn-secondary btn-sm" (click)="editingProfile.set(true)">Edit</button>
+            }
+          </div>
+          @if (editingProfile()) {
+            <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="form-grid">
+              <div class="form-group">
+                <label class="label">Name</label>
+                <input class="input-field" formControlName="name" />
+              </div>
+              <div class="form-group">
+                <label class="label">Summary</label>
+                <textarea class="input-field textarea" formControlName="summary" rows="3"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="label">Resume (PDF)</label>
+                <input class="input-field" type="file" accept=".pdf" (change)="onResumeFileChange($event)" />
+                @if (selectedResumeFile()) {
+                  <span class="info-hint">Selected: {{ selectedResumeFile()!.name }}</span>
+                } @else if (profile()?.resumeUrl) {
+                  <span class="info-hint">Current resume on file — upload a new PDF to replace it.</span>
+                }
+              </div>
+              <div class="form-group">
+                <label class="label">Portfolio URL</label>
+                <input class="input-field" formControlName="portfolioUrl" />
+              </div>
+              <div class="form-actions">
+                <button type="button" class="btn-secondary" (click)="editingProfile.set(false)">Cancel</button>
+                <button type="submit" class="btn-primary" [disabled]="uploadingResume()">
+                  @if (uploadingResume()) { <span class="spinner-sm"></span> }
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          } @else {
+            <div class="info-grid">
+              <div class="info-item"><span class="info-label">Name</span><span class="info-value">{{ profile()?.name }}</span></div>
+              <div class="info-item"><span class="info-label">Email</span><span class="info-value">{{ profile()?.email }}</span></div>
+              <div class="info-item full-width"><span class="info-label">Summary</span><span class="info-value">{{ profile()?.summary || 'Not provided' }}</span></div>
+              <div class="info-item">
+                <span class="info-label">Resume</span>
+                @if (profile()?.resumeUrl) {
+                  <a class="info-value resume-link" [href]="profile()!.resumeUrl" target="_blank" rel="noopener">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    View Resume
+                  </a>
+                } @else {
+                  <span class="info-value">Not provided</span>
+                }
+              </div>
+              <div class="info-item"><span class="info-label">Portfolio</span><span class="info-value">{{ profile()?.portfolioUrl || 'Not provided' }}</span></div>
+            </div>
+          }
+        </div>
+
+        <!-- Education -->
+        <div class="section card">
+          <div class="section-header">
+            <h2>Education</h2>
+            <button class="btn-primary btn-sm" (click)="openEdModal()">+ Add</button>
+          </div>
+          @if (profile()?.educations?.length === 0) {
+            <p class="empty-text">No education entries yet</p>
+          }
+          @for (edu of profile()?.educations; track edu.id) {
+            <div class="list-item">
+              <div class="list-item-content">
+                <strong>{{ edu.schoolName }}</strong>
+                <span>{{ edu.degree }} in {{ edu.field }}</span>
+                <span class="date-range">{{ edu.startDate | date:'MMM yyyy' }} - {{ edu.endDate | date:'MMM yyyy' }}</span>
+              </div>
+              <div class="list-item-actions">
+                <button class="icon-btn" (click)="openEdModal(edu)">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
+                <button class="icon-btn danger" (click)="confirmDeleteEd(edu.id!)">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Experience -->
+        <div class="section card">
+          <div class="section-header">
+            <h2>Experience</h2>
+            <button class="btn-primary btn-sm" (click)="openExpModal()">+ Add</button>
+          </div>
+          @if (profile()?.experiences?.length === 0) {
+            <p class="empty-text">No experience entries yet</p>
+          }
+          @for (exp of profile()?.experiences; track exp.id) {
+            <div class="list-item">
+              <div class="list-item-content">
+                <strong>{{ exp.title }} at {{ exp.companyName }}</strong>
+                <span>{{ exp.location }}</span>
+                <span class="date-range">{{ exp.startDate | date:'MMM yyyy' }} - {{ exp.isCurrent ? 'Present' : (exp.endDate | date:'MMM yyyy') }}</span>
+                @if (exp.description) {
+                  <p class="item-desc">{{ exp.description }}</p>
+                }
+              </div>
+              <div class="list-item-actions">
+                <button class="icon-btn" (click)="openExpModal(exp)">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
+                <button class="icon-btn danger" (click)="confirmDeleteExp(exp.id!)">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Skills -->
+        <div class="section card">
+          <div class="section-header">
+            <h2>Skills</h2>
+            <button class="btn-primary btn-sm" (click)="openSkillModal()">+ Add</button>
+          </div>
+          @if (profile()?.skills?.length === 0) {
+            <p class="empty-text">No skills added yet</p>
+          }
+          <div class="skills-grid">
+            @for (skill of profile()?.skills; track skill.id) {
+              <div class="skill-chip">
+                <span class="chip-name">{{ skill.name }}</span>
+                <span class="chip-level">{{ formatEnum(skill.level) }}</span>
+                <div class="chip-actions">
+                  <button class="chip-btn" (click)="openSkillModal(skill)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </button>
+                  <button class="chip-btn danger" (click)="confirmDeleteSkill(skill.id!)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Education Modal -->
+      @if (showEdModal()) {
+        <div class="modal-overlay" (click)="showEdModal.set(false)">
+          <div class="modal animate-slide-up" (click)="$event.stopPropagation()">
+            <h3>{{ editingEdId() ? 'Edit' : 'Add' }} Education</h3>
+            <form [formGroup]="edForm" (ngSubmit)="saveEducation()">
+              <div class="form-group"><label class="label">School Name *</label><input class="input-field" formControlName="schoolName" /></div>
+              <div class="form-row">
+                <div class="form-group"><label class="label">Degree</label><input class="input-field" formControlName="degree" /></div>
+                <div class="form-group"><label class="label">Field</label><input class="input-field" formControlName="field" /></div>
+              </div>
+              <div class="form-row">
+                <div class="form-group"><label class="label">Start Date</label><input class="input-field" type="date" formControlName="startDate" /></div>
+                <div class="form-group"><label class="label">End Date</label><input class="input-field" type="date" formControlName="endDate" /></div>
+              </div>
+              <div class="modal-actions">
+                <button type="button" class="btn-secondary" (click)="showEdModal.set(false)">Cancel</button>
+                <button type="submit" class="btn-primary">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      }
+
+      <!-- Experience Modal -->
+      @if (showExpModal()) {
+        <div class="modal-overlay" (click)="showExpModal.set(false)">
+          <div class="modal animate-slide-up" (click)="$event.stopPropagation()">
+            <h3>{{ editingExpId() ? 'Edit' : 'Add' }} Experience</h3>
+            <form [formGroup]="expForm" (ngSubmit)="saveExperience()">
+              <div class="form-group"><label class="label">Title *</label><input class="input-field" formControlName="title" /></div>
+              <div class="form-row">
+                <div class="form-group"><label class="label">Company</label><input class="input-field" formControlName="companyName" /></div>
+                <div class="form-group"><label class="label">Location</label><input class="input-field" formControlName="location" /></div>
+              </div>
+              <div class="form-row">
+                <div class="form-group"><label class="label">Start Date</label><input class="input-field" type="date" formControlName="startDate" /></div>
+                <div class="form-group"><label class="label">End Date</label><input class="input-field" type="date" formControlName="endDate" /></div>
+              </div>
+              <div class="form-group checkbox-group">
+                <label><input type="checkbox" formControlName="isCurrent" /> Currently working here</label>
+              </div>
+              <div class="form-group"><label class="label">Description</label><textarea class="input-field textarea" formControlName="description" rows="3"></textarea></div>
+              <div class="modal-actions">
+                <button type="button" class="btn-secondary" (click)="showExpModal.set(false)">Cancel</button>
+                <button type="submit" class="btn-primary">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      }
+
+      <!-- Skill Modal -->
+      @if (showSkillModal()) {
+        <div class="modal-overlay" (click)="showSkillModal.set(false)">
+          <div class="modal modal-sm animate-slide-up" (click)="$event.stopPropagation()">
+            <h3>{{ editingSkillId() ? 'Edit' : 'Add' }} Skill</h3>
+            <form [formGroup]="skillForm" (ngSubmit)="saveSkill()">
+              <div class="form-group"><label class="label">Skill Name *</label><input class="input-field" formControlName="name" /></div>
+              <div class="form-group">
+                <label class="label">Level *</label>
+                <select class="input-field" formControlName="level">
+                  @for (level of skillLevels; track level) {
+                    <option [value]="level">{{ formatEnum(level) }}</option>
+                  }
+                </select>
+              </div>
+              <div class="modal-actions">
+                <button type="button" class="btn-secondary" (click)="showSkillModal.set(false)">Cancel</button>
+                <button type="submit" class="btn-primary">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      }
+
+      <app-confirm-dialog
+        [open]="showDeleteConfirm()"
+        title="Delete Item"
+        message="Are you sure you want to delete this item? This action cannot be undone."
+        (confirmed)="executeDelete()"
+        (cancelled)="showDeleteConfirm.set(false)"
+      />
+    }
