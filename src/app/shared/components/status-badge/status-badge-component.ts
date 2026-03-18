@@ -2,7 +2,7 @@ import { Component, input } from '@angular/core';
 import { ApplicationStatus, JobStatus } from '../../../models/enums';
 
 @Component({
-  selector: 'app-status-badge-component',
+  selector: 'app-status-badge',
   imports: [],
   templateUrl: './status-badge-component.html',
   styleUrl: './status-badge-component.css',
