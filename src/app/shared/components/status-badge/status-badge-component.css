@@ -1,0 +1,19 @@
+
+    span {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.025em;
+      text-transform: capitalize;
+    }
+    .badge-pending { background: #FEF3C7; color: #92400E; }
+    .badge-in-review { background: #DBEAFE; color: #1E40AF; }
+    .badge-approved { background: #D1FAE5; color: #065F46; }
+    .badge-rejected { background: #FEE2E2; color: #991B1B; }
+    .badge-meeting { background: #E0E7FF; color: #3730A3; }
+    .badge-open { background: #D1FAE5; color: #065F46; }
+    .badge-closed { background: #F3F4F6; color: #6B7280; }
+    .badge-default { background: #F3F4F6; color: #6B7280; }
