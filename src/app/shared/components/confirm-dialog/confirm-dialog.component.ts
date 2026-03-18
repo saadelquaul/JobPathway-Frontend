@@ -1,0 +1,74 @@
+import { Component, input, output } from '@angular/core';
+
+@Component({
+  selector: 'app-confirm-dialog',
+  standalone: true,
+  template: `
+    @if (open()) {
+      <div class="overlay" (click)="onCancel()">
+        <div class="dialog animate-slide-up" (click)="$event.stopPropagation()">
+          <h3>{{ title() }}</h3>
+          <p>{{ message() }}</p>
+          <div class="actions">
+            <button class="btn-secondary" (click)="onCancel()">Cancel</button>
+            <button class="btn-danger" (click)="onConfirm()">{{ confirmText() }}</button>
+          </div>
+        </div>
+      </div>
+    }
+  `,
+  styles: `
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+    }
+    .dialog {
+      background: white;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    }
+    h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #0F172A;
+      margin-bottom: 0.5rem;
+    }
+    p {
+      font-size: 0.875rem;
+      color: #64748B;
+      margin-bottom: 1.25rem;
+      line-height: 1.5;
+    }
+    .actions {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: flex-end;
+    }
+  `,
+})
+export class ConfirmDialogComponent {
+  open = input(false);
+  title = input('Confirm');
+  message = input('Are you sure?');
+  confirmText = input('Delete');
+
+  confirmed = output<void>();
+  cancelled = output<void>();
+
+  onConfirm(): void {
+    this.confirmed.emit();
+  }
+
+  onCancel(): void {
+    this.cancelled.emit();
+  }
+}
