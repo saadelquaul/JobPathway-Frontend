@@ -39,7 +39,6 @@ export class ManageApplicationsComponent implements OnInit {
 
     this.appService.getApplicationsByJobOffer(jobId).subscribe({
       next: (data) => {
-        console.log(data);
         this.applications.set(data);
         const statuses: Record<number, string> = {};
         const dates: Record<number, string> = {};

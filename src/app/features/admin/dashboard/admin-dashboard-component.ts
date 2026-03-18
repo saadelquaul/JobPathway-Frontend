@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
+import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner-component';
 import { JobOfferService } from '../../../core/services/job-offer.service';
 import { Router } from '@angular/router';
 import { JobOfferResponse } from '../../../models/job.models';
@@ -41,6 +41,6 @@ export class AdminDashboardComponent implements OnInit {
   formatEnum(val: string): string {
     return val.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()).replace(/\B\w+/g, (w) => w.toLowerCase());
   }
-  
+
 }
 
