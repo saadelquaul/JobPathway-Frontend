@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
-import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner-component';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog-component';
 import { DatePipe } from '@angular/common';
 import { CandidateService } from '../../../core/services/candidate.service';
 import { ToastService } from '../../../shared/components/toast/toast.service';
