@@ -1,8 +1,8 @@
 import { SlicePipe } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
-import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge.component';
+import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner-component';
+import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge-component';
 import { JobOfferService } from '../../../core/services/job-offer.service';
 import { Router } from '@angular/router';
 import { JobOfferResponse } from '../../../models/job.models';

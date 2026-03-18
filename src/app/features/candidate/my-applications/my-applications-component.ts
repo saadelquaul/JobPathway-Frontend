@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
-import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge.component';
+import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner-component';
+import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge-component';
 import { DatePipe } from '@angular/common';
 import { ApplicationService } from '../../../core/services/application.service';
 import { Router } from '@angular/router';
