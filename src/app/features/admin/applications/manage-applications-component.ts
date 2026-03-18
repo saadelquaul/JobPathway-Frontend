@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
-import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge.component';
+import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner-component';
+import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge-component';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { ApplicationService } from '../../../core/services/application.service';

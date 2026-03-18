@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { LoadingSpinnerComponent } from '../../../../shared/components/loading-spinner/loading-spinner.component';
-import { StatusBadgeComponent } from '../../../../shared/components/status-badge/status-badge.component';
-import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { LoadingSpinnerComponent } from '../../../../shared/components/loading-spinner/loading-spinner-component';
+import { StatusBadgeComponent } from '../../../../shared/components/status-badge/status-badge-component';
+import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog-component';
 import { DatePipe } from '@angular/common';
 import { JobOfferService } from '../../../../core/services/job-offer.service';
 import { ToastService } from '../../../../shared/components/toast/toast.service';
