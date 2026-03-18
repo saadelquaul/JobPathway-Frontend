@@ -1,0 +1,101 @@
+
+    .layout { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 260px;
+      background: #0F172A;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 50;
+    }
+    .sidebar-header {
+      padding: 1.25rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .logo-area { display: flex; align-items: center; gap: 0.75rem; }
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: #0A66C2;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-info { display: flex; flex-direction: column; }
+    .logo-text { font-size: 1.1rem; font-weight: 700; color: white; }
+    .logo-badge {
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: #0A66C2;
+      background: rgba(10,102,194,0.15);
+      padding: 0.1rem 0.4rem;
+      border-radius: 0.25rem;
+      width: fit-content;
+    }
+    .sidebar-nav {
+      flex: 1;
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.7rem 0.875rem;
+      border-radius: 0.625rem;
+      color: #94A3B8;
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.06); color: white; }
+    .nav-item.active { background: rgba(10,102,194,0.2); color: #60A5FA; }
+    .sidebar-footer {
+      padding: 1rem 1.25rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .user-info { display: flex; align-items: center; gap: 0.75rem; }
+    .avatar {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #0A66C2, #3B82F6);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.875rem;
+    }
+    .user-details { display: flex; flex-direction: column; }
+    .user-name { font-size: 0.82rem; font-weight: 600; color: white; }
+    .user-role { font-size: 0.72rem; color: #64748B; }
+    .logout-btn {
+      background: none;
+      border: none;
+      color: #64748B;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      transition: all 0.15s;
+      display: flex;
+    }
+    .logout-btn:hover { background: rgba(239,68,68,0.1); color: #EF4444; }
+    .main-content {
+      flex: 1;
+      margin-left: 260px;
+      padding: 2rem;
+      background: #F8FAFC;
+      min-height: 100vh;
+    }
+  
