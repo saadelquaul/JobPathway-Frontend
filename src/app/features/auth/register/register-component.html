@@ -1,0 +1,53 @@
+
+    <div class="register-page">
+      <div class="register-left">
+        <div class="brand">
+          <div class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-9"/><path d="M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
+          </div>
+          <h1>JobPathway</h1>
+          <p>Join thousands of professionals who have found their dream careers through our platform.</p>
+        </div>
+      </div>
+      <div class="register-right">
+        <div class="register-card animate-fade-in">
+          <h2>Create your account</h2>
+          <p class="subtitle">Start your career journey today</p>
+          <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+              <label class="label" for="name">Full name</label>
+              <input id="name" type="text" class="input-field" formControlName="name" placeholder="John Doe" />
+              @if (form.controls.name.touched && form.controls.name.errors) {
+                <span class="error-text">Name is required</span>
+              }
+            </div>
+            <div class="form-group">
+              <label class="label" for="email">Email address</label>
+              <input id="email" type="email" class="input-field" formControlName="email" placeholder="name@company.com" />
+              @if (form.controls.email.touched && form.controls.email.errors) {
+                <span class="error-text">Please enter a valid email address</span>
+              }
+            </div>
+            <div class="form-group">
+              <label class="label" for="password">Password</label>
+              <input id="password" type="password" class="input-field" formControlName="password" placeholder="Minimum 6 characters" />
+              @if (form.controls.password.touched && form.controls.password.errors) {
+                <span class="error-text">Password must be at least 6 characters</span>
+              }
+            </div>
+            @if (errorMessage()) {
+              <div class="error-banner">{{ errorMessage() }}</div>
+            }
+            <button type="submit" class="btn-primary submit-btn" [disabled]="loading()">
+              @if (loading()) {
+                <span class="spinner-sm"></span>
+              }
+              Create account
+            </button>
+          </form>
+          <p class="login-link">
+            Already have an account? <a routerLink="/login">Sign in</a>
+          </p>
+        </div>
+      </div>
+    </div>
