@@ -1,3 +1,105 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
+import { roleGuard } from './core/guards/role.guard';
 
-export const routes: Routes = [];
+export const routes: Routes = [
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./features/auth/login/login-component').then((m) => m.LoginComponent),
+  },
+  {
+    path: 'register',
+    loadComponent: () =>
+      import('./features/auth/register/register-component').then((m) => m.RegisterComponent),
+  },
+  {
+    path: 'candidate',
+    loadComponent: () =>
+      import('./features/candidate/layout/candidate-layout-component').then(
+        (m) => m.CandidateLayoutComponent,
+      ),
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'CANDIDATE' },
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./features/candidate/job-board/job-board-component').then(
+            (m) => m.JobBoardComponent,
+          ),
+      },
+      {
+        path: 'jobs/:id',
+        loadComponent: () =>
+          import('./features/candidate/job-detail/job-detail-component').then(
+            (m) => m.JobDetailComponent,
+          ),
+      },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./features/candidate/profile/profile').then(
+            (m) => m.Profile,
+          ),
+      },
+      {
+        path: 'applications',
+        loadComponent: () =>
+          import('./features/candidate/my-applications/my-applications-component').then(
+            (m) => m.MyApplicationsComponent,
+          ),
+      },
+    ],
+  },
+  {
+    path: 'admin',
+    loadComponent: () =>
+      import('./features/admin/layout/admin-layout-component').then(
+        (m) => m.AdminLayoutComponent,
+      ),
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'ADMIN' },
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./features/admin/dashboard/admin-dashboard-component').then(
+            (m) => m.AdminDashboardComponent,
+          ),
+      },
+      {
+        path: 'job-offers',
+        loadComponent: () =>
+          import('./features/admin/job-offers/job-offer-list/job-offer-list-component').then(
+            (m) => m.JobOfferListComponent,
+          ),
+      },
+      {
+        path: 'job-offers/new',
+        loadComponent: () =>
+          import('./features/admin/job-offers/job-offer-form/job-offer-form').then(
+            (m) => m.JobOfferForm,
+          ),
+      },
+      {
+        path: 'job-offers/:id/edit',
+        loadComponent: () =>
+          import('./features/admin/job-offers/job-offer-form/job-offer-form').then(
+            (m) => m.JobOfferForm,
+          ),
+      },
+      {
+        path: 'applications/:jobId',
+        loadComponent: () =>
+          import('./features/admin/applications/manage-applications-component').then(
+            (m) => m.ManageApplicationsComponent,
+          ),
+      },
+    ],
+  },
+  { path: '**', redirectTo: 'login' },
+];
