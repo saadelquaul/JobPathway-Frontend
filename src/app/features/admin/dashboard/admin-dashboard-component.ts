@@ -24,14 +24,14 @@ export class AdminDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     forkJoin({
-      all: this.jobService.getAllJobOffers(),
-      open: this.jobService.getOpenJobOffers(),
+      all: this.jobService.getAllJobOffersPaginated(0, 1000),
+      open: this.jobService.getOpenJobOffersPaginated(0, 1000),
     }).subscribe({
       next: ({ all, open }) => {
-        this.totalJobs.set(all.length);
-        this.openJobs.set(open.length);
-        this.closedJobs.set(all.filter((j) => j.status === JobStatus.CLOSED).length);
-        this.recentJobs.set(all.slice(0, 5));
+        this.totalJobs.set(all.totalElements);
+        this.openJobs.set(open.totalElements);
+        this.closedJobs.set(all.content.filter((j) => j.status === JobStatus.CLOSED).length);
+        this.recentJobs.set(all.content.slice(0, 5));
         this.loading.set(false);
       },
       error: () => { this.loading.set(false); },
