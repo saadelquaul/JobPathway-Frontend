@@ -34,5 +34,18 @@
             </div>
           }
         </div>
+
+        @if (totalPages() > 1) {
+          <div class="pagination-wrapper">
+            <app-pagination
+              [currentPage]="currentPage()"
+              [totalPages]="totalPages()"
+              [totalElements]="totalElements()"
+              [pageSize]="pageSize()"
+              (pageChange)="onPageChange($event)"
+              (pageSizeChange)="onPageSizeChange($event)"
+            />
+          </div>
+        }
       }
     </div>
