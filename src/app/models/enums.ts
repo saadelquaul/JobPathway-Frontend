@@ -21,7 +21,7 @@ export enum JobType {
 
 export enum WorkModel {
   REMOTE = 'REMOTE',
-  ONSITE = 'ONSITE',
+  ONSITE = 'ON_SITE',
   HYBRID = 'HYBRID',
 }
 
