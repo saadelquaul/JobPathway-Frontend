@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { JobOfferRequest, JobOfferResponse, JobOfferStatusRequest } from '../../models/job.models';
+import { PageResponse } from '../../models/pagination.models';
 
 @Injectable({ providedIn: 'root' })
 export class JobOfferService {
@@ -14,8 +15,32 @@ export class JobOfferService {
     return this.http.get<JobOfferResponse[]>(this.apiUrl);
   }
 
+  getAllJobOffersPaginated(page: number = 0, size: number = 10, sort: string[] = ['createdAt,desc']): Observable<PageResponse<JobOfferResponse>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    sort.forEach(s => {
+      params = params.append('sort', s);
+    });
+
+    return this.http.get<PageResponse<JobOfferResponse>>(this.apiUrl, { params });
+  }
+
   getOpenJobOffers(): Observable<JobOfferResponse[]> {
     return this.http.get<JobOfferResponse[]>(`${this.apiUrl}/open`);
+  }
+
+  getOpenJobOffersPaginated(page: number = 0, size: number = 10, sort: string[] = ['createdAt,desc']): Observable<PageResponse<JobOfferResponse>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    sort.forEach(s => {
+      params = params.append('sort', s);
+    });
+
+    return this.http.get<PageResponse<JobOfferResponse>>(`${this.apiUrl}/open`, { params });
   }
 
   getJobOfferById(id: number): Observable<JobOfferResponse> {
