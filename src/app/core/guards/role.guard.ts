@@ -13,7 +13,14 @@ export const roleGuard: CanActivateFn = (route) => {
   }
 
   if (expectedRole && authService.getRole() !== expectedRole) {
-    router.navigate(['/login']);
+    // Redirect to appropriate dashboard based on actual role
+    if (authService.isAdmin()) {
+      router.navigate(['/admin/dashboard']);
+    } else if (authService.isCandidate()) {
+      router.navigate(['/candidate/dashboard']);
+    } else {
+      router.navigate(['/']);
+    }
     return false;
   }
 
