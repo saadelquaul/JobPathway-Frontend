@@ -1,0 +1,57 @@
+<div class="pagination-container">
+  <div class="pagination-info">
+    <span class="text-sm">
+      Showing <strong>{{ startItem }}</strong> to <strong>{{ endItem }}</strong> of <strong>{{ totalElements() }}</strong> results
+    </span>
+  </div>
+
+  <div class="pagination-controls">
+    <div class="page-size-selector">
+      <label for="pageSize" class="text-sm">Items per page:</label>
+      <select
+        id="pageSize"
+        class="page-size-select"
+        [value]="pageSize()"
+        (change)="changePageSize(+$any($event.target).value)">
+        @for (size of pageSizes; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="pagination-buttons">
+      <button
+        class="pagination-btn"
+        [disabled]="currentPage() === 0"
+        (click)="previousPage()"
+        title="Previous page">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </button>
+
+      @for (page of pages; track page) {
+        @if (page === -1) {
+          <span class="pagination-ellipsis">...</span>
+        } @else {
+          <button
+            class="pagination-btn"
+            [class.active]="page === currentPage()"
+            (click)="goToPage(page)">
+            {{ page + 1 }}
+          </button>
+        }
+      }
+
+      <button
+        class="pagination-btn"
+        [disabled]="currentPage() === totalPages() - 1"
+        (click)="nextPage()"
+        title="Next page">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
