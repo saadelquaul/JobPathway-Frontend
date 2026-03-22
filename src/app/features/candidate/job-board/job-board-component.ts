@@ -1,8 +1,9 @@
 import { SlicePipe } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner-component';
 import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge-component';
+import { PaginationComponent } from '../../../shared/components/pagination/pagination-component';
 import { JobOfferService } from '../../../core/services/job-offer.service';
 import { Router } from '@angular/router';
 import { JobOfferResponse } from '../../../models/job.models';
@@ -10,7 +11,7 @@ import { JobType, WorkModel } from '../../../models/enums';
 
 @Component({
   selector: 'app-job-board-component',
-  imports: [FormsModule, LoadingSpinnerComponent, StatusBadgeComponent, SlicePipe],
+  imports: [FormsModule, LoadingSpinnerComponent, StatusBadgeComponent, SlicePipe, PaginationComponent],
   templateUrl: './job-board-component.html',
   styleUrl: './job-board-component.css',
 })
@@ -30,11 +31,30 @@ export class JobBoardComponent implements OnInit{
   jobTypes = Object.values(JobType);
   workModels = Object.values(WorkModel);
 
+  // Pagination
+  currentPage = signal(0);
+  pageSize = signal(9);
+
+  // Computed pagination for filtered results
+  totalElements = computed(() => this.filteredJobs().length);
+  totalPages = computed(() => Math.ceil(this.totalElements() / this.pageSize()));
+  paginatedJobs = computed(() => {
+    const start = this.currentPage() * this.pageSize();
+    const end = start + this.pageSize();
+    return this.filteredJobs().slice(start, end);
+  });
+
   ngOnInit(): void {
-    this.jobService.getOpenJobOffers().subscribe({
-      next: (data) => {
-        this.jobs.set(data);
-        this.filteredJobs.set(data);
+    this.loadJobs();
+  }
+
+  loadJobs(): void {
+    this.loading.set(true);
+    // Load all open jobs for client-side filtering
+    this.jobService.getOpenJobOffersPaginated(0, 1000).subscribe({
+      next: (page) => {
+        this.jobs.set(page.content);
+        this.filteredJobs.set(page.content);
         this.loading.set(false);
       },
       error: () => {
@@ -62,6 +82,16 @@ export class JobBoardComponent implements OnInit{
       result = result.filter((j) => j.workModel === this.selectedWorkModel);
     }
     this.filteredJobs.set(result);
+    this.currentPage.set(0); // Reset to first page when filters change
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage.set(page);
+  }
+
+  onPageSizeChange(size: number): void {
+    this.pageSize.set(size);
+    this.currentPage.set(0);
   }
 
   viewJob(id: number): void {

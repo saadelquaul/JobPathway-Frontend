@@ -37,33 +37,48 @@
           <p>Try adjusting your search or filters</p>
         </div>
       } @else {
-        <div class="job-grid">
-          @for (job of filteredJobs(); track job.id) {
-            <div class="job-card animate-fade-in" (click)="viewJob(job.id)">
-              <div class="job-card-header">
-                <h3 class="job-title">{{ job.title }}</h3>
-                <app-status-badge [status]="job.status" />
+        <div class="jobs-container">
+          <div class="job-grid">
+            @for (job of paginatedJobs(); track job.id) {
+              <div class="job-card animate-fade-in" (click)="viewJob(job.id)">
+                <div class="job-card-header">
+                  <h3 class="job-title">{{ job.title }}</h3>
+                  <app-status-badge [status]="job.status" />
+                </div>
+                <p class="job-description">{{ job.description | slice:0:120 }}{{ job.description.length > 120 ? '...' : '' }}</p>
+                <div class="job-tags">
+                  <span class="tag tag-type">{{ formatEnum(job.type) }}</span>
+                  <span class="tag tag-model">{{ formatEnum(job.workModel) }}</span>
+                </div>
+                <div class="job-meta">
+                  @if (job.location) {
+                    <span class="meta-item">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                      {{ job.location }}
+                    </span>
+                  }
+                  @if (job.salaryRange) {
+                    <span class="meta-item">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                      {{ job.salaryRange }}
+                    </span>
+                  }
+                </div>
+                <button class="btn-primary view-btn">View Details</button>
               </div>
-              <p class="job-description">{{ job.description | slice:0:120 }}{{ job.description.length > 120 ? '...' : '' }}</p>
-              <div class="job-tags">
-                <span class="tag tag-type">{{ formatEnum(job.type) }}</span>
-                <span class="tag tag-model">{{ formatEnum(job.workModel) }}</span>
-              </div>
-              <div class="job-meta">
-                @if (job.location) {
-                  <span class="meta-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    {{ job.location }}
-                  </span>
-                }
-                @if (job.salaryRange) {
-                  <span class="meta-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                    {{ job.salaryRange }}
-                  </span>
-                }
-              </div>
-              <button class="btn-primary view-btn">View Details</button>
+            }
+          </div>
+
+          @if (totalPages() > 1) {
+            <div class="pagination-wrapper">
+              <app-pagination
+                [currentPage]="currentPage()"
+                [totalPages]="totalPages()"
+                [totalElements]="totalElements()"
+                [pageSize]="pageSize()"
+                (pageChange)="onPageChange($event)"
+                (pageSizeChange)="onPageSizeChange($event)"
+              />
             </div>
           }
         </div>
