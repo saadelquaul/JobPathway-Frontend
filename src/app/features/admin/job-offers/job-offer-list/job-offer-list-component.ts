@@ -2,16 +2,18 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../../shared/components/loading-spinner/loading-spinner-component';
 import { StatusBadgeComponent } from '../../../../shared/components/status-badge/status-badge-component';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog-component';
+import { PaginationComponent } from '../../../../shared/components/pagination/pagination-component';
 import { DatePipe } from '@angular/common';
 import { JobOfferService } from '../../../../core/services/job-offer.service';
 import { ToastService } from '../../../../shared/components/toast/toast.service';
 import { Router } from '@angular/router';
 import { JobOfferResponse } from '../../../../models/job.models';
 import { JobStatus } from '../../../../models/enums';
+import { PageResponse } from '../../../../models/pagination.models';
 
 @Component({
   selector: 'app-job-offer-list-component',
-  imports: [LoadingSpinnerComponent, StatusBadgeComponent, ConfirmDialogComponent, DatePipe],
+  imports: [LoadingSpinnerComponent, StatusBadgeComponent, ConfirmDialogComponent, PaginationComponent, DatePipe],
   templateUrl: './job-offer-list-component.html',
   styleUrl: './job-offer-list-component.css',
 })
@@ -26,15 +28,41 @@ export class JobOfferListComponent implements OnInit {
   deleteId = signal<number | null>(null);
   readonly JobStatus = JobStatus;
 
+  // Pagination
+  currentPage = signal(0);
+  pageSize = signal(10);
+  totalPages = signal(0);
+  totalElements = signal(0);
+
   ngOnInit(): void {
     this.loadJobs();
   }
 
   loadJobs(): void {
-    this.jobService.getAllJobOffers().subscribe({
-      next: (data) => { this.jobs.set(data); this.loading.set(false); },
-      error: () => { this.loading.set(false); },
+    this.loading.set(true);
+    this.jobService.getAllJobOffersPaginated(this.currentPage(), this.pageSize()).subscribe({
+      next: (page: PageResponse<JobOfferResponse>) => {
+        this.jobs.set(page.content);
+        this.totalPages.set(page.totalPages);
+        this.totalElements.set(page.totalElements);
+        this.currentPage.set(page.number);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loading.set(false);
+      },
     });
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage.set(page);
+    this.loadJobs();
+  }
+
+  onPageSizeChange(size: number): void {
+    this.pageSize.set(size);
+    this.currentPage.set(0);
+    this.loadJobs();
   }
 
   confirmDelete(id: number): void {
@@ -47,9 +75,9 @@ export class JobOfferListComponent implements OnInit {
     if (!id) return;
     this.jobService.deleteJobOffer(id).subscribe({
       next: () => {
-        this.jobs.update((list) => list.filter((j) => j.id !== id));
         this.toast.success('Job offer deleted');
         this.showDeleteConfirm.set(false);
+        this.loadJobs(); // Reload current page
       },
       error: () => {
         this.toast.error('Failed to delete job offer');
