@@ -15,6 +15,7 @@ export class AuthService {
   readonly isLoggedIn = computed(() => !!this.currentUser());
   readonly userRole = computed(() => this.currentUser()?.role ?? null);
   readonly userName = computed(() => this.currentUser()?.name ?? '');
+  readonly userProfilePicture = computed(() => this.currentUser()?.profilePicture ?? null);
 
   constructor(
     private readonly http: HttpClient,
@@ -62,6 +63,15 @@ export class AuthService {
   private storeUser(res: AuthResponse): void {
     localStorage.setItem('auth_user', JSON.stringify(res));
     this.currentUser.set(res);
+  }
+
+  updateProfilePicture(url: string): void {
+    const user = this.currentUser();
+    if (user) {
+      const updated = { ...user, profilePicture: url };
+      localStorage.setItem('auth_user', JSON.stringify(updated));
+      this.currentUser.set(updated);
+    }
   }
 
   private loadUser(): AuthResponse | null {
