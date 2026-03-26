@@ -16,7 +16,6 @@ export class WebSocketService {
 
   connect(token: string): void {
     if (this.client?.active) {
-      console.log('WebSocket already connected');
       return;
     }
 
@@ -30,16 +29,10 @@ export class WebSocketService {
       connectHeaders: {
         Authorization: `Bearer ${token}`,
       },
-      debug: (str: string) => {
-        if (environment.apiUrl.includes('localhost')) {
-          console.log('STOMP:', str);
-        }
-      },
       reconnectDelay: 5000,
       heartbeatIncoming: 10000,
       heartbeatOutgoing: 10000,
       onConnect: () => {
-        console.log('✅ WebSocket connected successfully');
         this.connectionStatus.next(true);
         this.reconnectAttempts = 0;
       },
@@ -49,7 +42,6 @@ export class WebSocketService {
         this.handleReconnect(token);
       },
       onWebSocketClose: () => {
-        console.log('🔌 WebSocket connection closed');
         this.connectionStatus.next(false);
         this.handleReconnect(token);
       },
@@ -75,7 +67,6 @@ export class WebSocketService {
         this.reconnectTimeout = null;
       }
 
-      console.log('🔌 WebSocket disconnected');
     }
   }
 
@@ -87,15 +78,14 @@ export class WebSocketService {
 
     // Wait for connection before subscribing
     if (!this.client.connected) {
-      console.log('Waiting for WebSocket connection before subscribing...');
-      
+
       // Store the subscription to be executed after connection
       const connectCallback = () => {
         if (this.client?.connected) {
           this.performSubscription(destination, callback);
         }
       };
-      
+
       // Listen for connection and then subscribe
       const tempSub = this.connectionStatus$.subscribe((connected) => {
         if (connected) {
@@ -103,7 +93,7 @@ export class WebSocketService {
           tempSub.unsubscribe();
         }
       });
-      
+
       return () => tempSub.unsubscribe();
     }
 
@@ -133,10 +123,8 @@ export class WebSocketService {
     this.reconnectAttempts++;
     const delay = Math.min(1000 * Math.pow(2, this.reconnectAttempts), 30000);
 
-    console.log(`🔄 Reconnecting in ${delay / 1000}s (attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
 
     this.reconnectTimeout = setTimeout(() => {
-      console.log('🔄 Attempting to reconnect...');
       this.connect(token);
     }, delay);
   }
