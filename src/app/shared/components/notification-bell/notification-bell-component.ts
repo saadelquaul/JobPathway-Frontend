@@ -98,7 +98,6 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
         // For admin, fetch application to get jobOfferId and navigate to specific job offer's applications
         this.applicationService.getApplicationById(notification.relatedEntityId).subscribe({
           next: (application) => {
-            console.log(application);
             this.router.navigate(['/admin/applications/', application.jobOfferId]);
           },
           error: () => {
@@ -130,16 +129,15 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
   }
 
   getTimeAgo(dateString: string): string {
-    const now = this.currentTime(); // Use the signal that updates every minute
-    const notificationDate = new Date(dateString);
-    
-    // Debug logging
-    console.log('Date string:', dateString);
-    console.log('Parsed date:', notificationDate);
-    console.log('Current time:', now);
-    
+    // Ensure dateString is treated as UTC if it lacks timezone info
+    let normalizedDate = dateString;
+    if (!normalizedDate.endsWith('Z') && !normalizedDate.includes('+') && !normalizedDate.includes('Z')) {
+      normalizedDate += 'Z';
+    }
+
+    const now = new Date();
+    const notificationDate = new Date(normalizedDate);
     const secondsAgo = Math.floor((now.getTime() - notificationDate.getTime()) / 1000);
-    console.log('Seconds ago:', secondsAgo);
 
     if (secondsAgo < 0) return 'just now'; // Handle future dates
     if (secondsAgo < 60) return 'just now';

@@ -15,6 +15,7 @@ export interface AuthResponse {
   email: string;
   role: string;
   name: string;
+  profilePicture?: string;
 }
 
 export interface AdminCreateRequest {
