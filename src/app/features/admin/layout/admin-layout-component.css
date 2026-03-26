@@ -1,33 +1,56 @@
 
-    .layout { display: flex; min-height: 100vh; }
-    .sidebar {
-      width: 260px;
-      background: #0F172A;
+    .layout {
       display: flex;
       flex-direction: column;
-      position: fixed;
+      min-height: 100vh;
+    }
+    .navbar {
+      background: #0F172A;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      position: sticky;
       top: 0;
-      left: 0;
-      bottom: 0;
       z-index: 50;
     }
-    .sidebar-header {
-      padding: 1.25rem;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-    .logo-area { display: flex; align-items: center; gap: 0.75rem; }
-    .logo-icon {
-      width: 36px;
-      height: 36px;
-      background: #0A66C2;
-      border-radius: 10px;
+    .navbar-content {
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
+      padding: 0 1.5rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      height: 70px;
     }
-    .logo-info { display: flex; flex-direction: column; }
-    .logo-text { font-size: 1.1rem; font-weight: 700; color: white; }
-    .logo-badge {
+    .navbar-left {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+    .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .brand-logo {
+      height: 40px;
+      width: auto;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+    }
+    .brand-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .brand-text {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: white;
+    }
+    .brand-badge {
       font-size: 0.65rem;
       font-weight: 600;
       color: #0A66C2;
@@ -36,18 +59,16 @@
       border-radius: 0.25rem;
       width: fit-content;
     }
-    .sidebar-nav {
-      flex: 1;
-      padding: 0.75rem;
+    .nav-links {
       display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
+      align-items: center;
+      gap: 0.5rem;
     }
     .nav-item {
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      padding: 0.7rem 0.875rem;
+      padding: 0.625rem 1rem;
       border-radius: 0.625rem;
       color: #94A3B8;
       text-decoration: none;
@@ -57,12 +78,10 @@
     }
     .nav-item:hover { background: rgba(255,255,255,0.06); color: white; }
     .nav-item.active { background: rgba(10,102,194,0.2); color: #60A5FA; }
-    .sidebar-footer {
-      padding: 1rem 1.25rem;
-      border-top: 1px solid rgba(255,255,255,0.08);
+    .user-menu {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      gap: 0.75rem;
     }
     .user-info { display: flex; align-items: center; gap: 0.75rem; }
     .avatar {
@@ -93,9 +112,15 @@
     .logout-btn:hover { background: rgba(239,68,68,0.1); color: #EF4444; }
     .main-content {
       flex: 1;
-      margin-left: 260px;
       padding: 2rem;
       background: #F8FAFC;
-      min-height: 100vh;
     }
-  
+
+    /* Notification bell styles for dark navbar */
+    ::ng-deep .navbar app-notification-bell .bell-button {
+      color: white;
+    }
+    ::ng-deep .navbar app-notification-bell .bell-button:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
