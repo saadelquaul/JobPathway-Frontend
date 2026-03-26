@@ -18,6 +18,42 @@
           </div>
           @if (editingProfile()) {
             <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="form-grid">
+              <!-- Profile Picture -->
+              <div class="form-group full-width">
+                <label class="label">Profile Picture</label>
+                <div class="profile-pic-upload">
+                  <div class="profile-pic-preview">
+                    @if (profilePicturePreview()) {
+                      <img [src]="profilePicturePreview()!" alt="Profile preview" />
+                    } @else if (profile()?.profilePicture) {
+                      <img [src]="profile()!.profilePicture" alt="Current profile" />
+                    } @else {
+                      <div class="profile-pic-placeholder">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                          <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                      </div>
+                    }
+                  </div>
+                  <div class="profile-pic-actions">
+                    <input type="file" accept="image/png,image/jpeg,image/jpg"
+                           (change)="onProfilePictureChange($event)"
+                           #profilePicInput
+                           style="display: none" />
+                    <button type="button" class="btn-secondary btn-sm"
+                            (click)="profilePicInput.click()">
+                      Choose Photo
+                    </button>
+                    @if (selectedProfilePicture()) {
+                      <span class="info-hint">{{ selectedProfilePicture()!.name }}</span>
+                    } @else {
+                      <span class="info-hint">JPG or PNG, max 2MB</span>
+                    }
+                  </div>
+                </div>
+              </div>
+
               <div class="form-group">
                 <label class="label">Name</label>
                 <input class="input-field" formControlName="name" />
@@ -41,14 +77,28 @@
               </div>
               <div class="form-actions">
                 <button type="button" class="btn-secondary" (click)="editingProfile.set(false)">Cancel</button>
-                <button type="submit" class="btn-primary" [disabled]="uploadingResume()">
-                  @if (uploadingResume()) { <span class="spinner-sm"></span> }
+                <button type="submit" class="btn-primary" [disabled]="uploadingResume() || uploadingProfilePicture()">
+                  @if (uploadingResume() || uploadingProfilePicture()) { <span class="spinner-sm"></span> }
                   Save Changes
                 </button>
               </div>
             </form>
           } @else {
             <div class="info-grid">
+              <!-- Profile Picture Display -->
+              <div class="info-item full-width profile-pic-display">
+                @if (profile()?.profilePicture) {
+                  <img [src]="profile()!.profilePicture" alt="Profile" class="profile-avatar" />
+                } @else {
+                  <div class="profile-avatar-placeholder">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                  </div>
+                }
+              </div>
+
               <div class="info-item"><span class="info-label">Name</span><span class="info-value">{{ profile()?.name }}</span></div>
               <div class="info-item"><span class="info-label">Email</span><span class="info-value">{{ profile()?.email }}</span></div>
               <div class="info-item full-width"><span class="info-label">Summary</span><span class="info-value">{{ profile()?.summary || 'Not provided' }}</span></div>

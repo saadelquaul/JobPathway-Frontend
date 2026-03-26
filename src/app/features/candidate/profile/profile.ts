@@ -4,6 +4,7 @@ import { LoadingSpinnerComponent } from '../../../shared/components/loading-spin
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog-component';
 import { DatePipe } from '@angular/common';
 import { CandidateService } from '../../../core/services/candidate.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../shared/components/toast/toast.service';
 import { CandidateProfileResponse, CandidateProfileUpdateRequest, CandidateSkillDTO, EducationDTO, ExperienceDTO } from '../../../models/candidate.models';
 import { SkillLevel } from '../../../models/enums';
@@ -17,6 +18,7 @@ import { SkillLevel } from '../../../models/enums';
 export class Profile implements OnInit{
 
   private readonly candidateService = inject(CandidateService);
+  private readonly authService = inject(AuthService);
   private readonly toast = inject(ToastService);
   private readonly fb = inject(FormBuilder);
 
@@ -25,6 +27,9 @@ export class Profile implements OnInit{
   editingProfile = signal(false);
   selectedResumeFile = signal<File | null>(null);
   uploadingResume = signal(false);
+  selectedProfilePicture = signal<File | null>(null);
+  profilePicturePreview = signal<string | null>(null);
+  uploadingProfilePicture = signal(false);
 
   showEdModal = signal(false);
   editingEdId = signal<number | null>(null);
@@ -95,11 +100,79 @@ export class Profile implements OnInit{
     this.selectedResumeFile.set(file);
   }
 
-  saveProfile(): void {
-    const file = this.selectedResumeFile();
+  onProfilePictureChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0] ?? null;
+    
+    // Validate file size (2MB)
+    if (file && file.size > 2 * 1024 * 1024) {
+      this.toast.error('File size must be less than 2MB');
+      input.value = ''; // Clear the file input
+      this.selectedProfilePicture.set(null);
+      this.profilePicturePreview.set(null);
+      return;
+    }
+    
+    // Validate file type
+    if (file && !['image/jpeg', 'image/png', 'image/jpg'].includes(file.type)) {
+      this.toast.error('Only JPG and PNG images are allowed');
+      input.value = '';
+      this.selectedProfilePicture.set(null);
+      this.profilePicturePreview.set(null);
+      return;
+    }
+    
+    this.selectedProfilePicture.set(file);
+    
+    // Create preview
     if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.profilePicturePreview.set(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      this.profilePicturePreview.set(null);
+    }
+  }
+
+  saveProfile(): void {
+    const resumeFile = this.selectedResumeFile();
+    const profilePicFile = this.selectedProfilePicture();
+    
+    // Handle both uploads if needed
+    if (resumeFile && profilePicFile) {
       this.uploadingResume.set(true);
-      this.candidateService.uploadResume(file).subscribe({
+      this.uploadingProfilePicture.set(true);
+      
+      // Upload both in parallel
+      this.candidateService.uploadResume(resumeFile).subscribe({
+        next: ({ url: resumeUrl }) => {
+          this.uploadingResume.set(false);
+          this.selectedResumeFile.set(null);
+          
+          this.candidateService.uploadProfilePicture(profilePicFile).subscribe({
+            next: ({ url: profileUrl }) => {
+              this.uploadingProfilePicture.set(false);
+              this.selectedProfilePicture.set(null);
+              this.profilePicturePreview.set(null);
+              this.doUpdateProfile(resumeUrl, profileUrl);
+            },
+            error: () => {
+              this.uploadingProfilePicture.set(false);
+              this.toast.error('Failed to upload profile picture');
+            },
+          });
+        },
+        error: () => {
+          this.uploadingResume.set(false);
+          this.uploadingProfilePicture.set(false);
+          this.toast.error('Failed to upload resume');
+        },
+      });
+    } else if (resumeFile) {
+      this.uploadingResume.set(true);
+      this.candidateService.uploadResume(resumeFile).subscribe({
         next: ({ url }) => {
           this.uploadingResume.set(false);
           this.selectedResumeFile.set(null);
@@ -110,18 +183,37 @@ export class Profile implements OnInit{
           this.toast.error('Failed to upload resume');
         },
       });
+    } else if (profilePicFile) {
+      this.uploadingProfilePicture.set(true);
+      this.candidateService.uploadProfilePicture(profilePicFile).subscribe({
+        next: ({ url }) => {
+          this.uploadingProfilePicture.set(false);
+          this.selectedProfilePicture.set(null);
+          this.profilePicturePreview.set(null);
+          this.doUpdateProfile(undefined, url);
+        },
+        error: () => {
+          this.uploadingProfilePicture.set(false);
+          this.toast.error('Failed to upload profile picture');
+        },
+      });
     } else {
       this.doUpdateProfile();
     }
   }
 
-  private doUpdateProfile(resumeUrl?: string): void {
+  private doUpdateProfile(resumeUrl?: string, profilePictureUrl?: string): void {
     const data: CandidateProfileUpdateRequest = this.profileForm.getRawValue();
     if (resumeUrl !== undefined) data.resumeUrl = resumeUrl;
+    if (profilePictureUrl !== undefined) data.profilePicture = profilePictureUrl;
     this.candidateService.updateProfile(data).subscribe({
       next: (updated) => {
         this.profile.set(updated);
         this.editingProfile.set(false);
+        // Update avatar in header
+        if (profilePictureUrl) {
+          this.authService.updateProfilePicture(profilePictureUrl);
+        }
         this.toast.success('Profile updated');
       },
       error: () => this.toast.error('Failed to update profile'),
