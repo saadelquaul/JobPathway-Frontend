@@ -47,6 +47,10 @@ export class ApplicationService {
     return this.http.get<PageResponse<ApplicationResponse>>(`${this.apiUrl}/job-offer/${jobOfferId}`, { params });
   }
 
+  getApplicationById(id: number): Observable<ApplicationResponse> {
+    return this.http.get<ApplicationResponse>(`${this.apiUrl}/${id}`);
+  }
+
   updateApplicationStatus(id: number, req: ApplicationStatusUpdateRequest): Observable<ApplicationResponse> {
     return this.http.put<ApplicationResponse>(`${this.apiUrl}/${id}/status`, req);
   }
