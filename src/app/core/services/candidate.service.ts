@@ -30,6 +30,12 @@ export class CandidateService {
     return this.http.post<{ url: string }>(`${this.apiUrl}/resume`, formData);
   }
 
+  uploadProfilePicture(file: File): Observable<{ url: string }> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<{ url: string }>(`${this.apiUrl}/profile-picture`, formData);
+  }
+
   addEducation(dto: EducationDTO): Observable<CandidateProfileResponse> {
     return this.http.post<CandidateProfileResponse>(`${this.apiUrl}/education`, dto);
   }
