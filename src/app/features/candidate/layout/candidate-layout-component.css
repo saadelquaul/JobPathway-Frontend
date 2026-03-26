@@ -1,52 +1,60 @@
 
-    .layout { display: flex; min-height: 100vh; }
-    .sidebar {
-      width: 260px;
-      background: white;
-      border-right: 1px solid #E2E8F0;
+    .layout {
       display: flex;
       flex-direction: column;
-      position: fixed;
+      min-height: 100vh;
+    }
+    .navbar {
+      background: white;
+      border-bottom: 1px solid #E2E8F0;
+      position: sticky;
       top: 0;
-      left: 0;
-      bottom: 0;
       z-index: 50;
     }
-    .sidebar-header {
-      padding: 1.25rem;
-      border-bottom: 1px solid #E2E8F0;
+    .navbar-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      height: 70px;
     }
-    .logo-area {
+    .navbar-left {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+    .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .brand {
       display: flex;
       align-items: center;
       gap: 0.75rem;
     }
-    .logo-icon {
-      width: 36px;
-      height: 36px;
-      background: #0A66C2;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .brand-logo {
+      height: 40px;
+      width: auto;
+      object-fit: contain;
     }
-    .logo-text {
+    .brand-text {
       font-size: 1.15rem;
       font-weight: 700;
       color: #0F172A;
     }
-    .sidebar-nav {
-      flex: 1;
-      padding: 0.75rem;
+    .nav-links {
       display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
+      align-items: center;
+      gap: 0.5rem;
     }
     .nav-item {
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      padding: 0.7rem 0.875rem;
+      padding: 0.625rem 1rem;
       border-radius: 0.625rem;
       color: #475569;
       text-decoration: none;
@@ -56,12 +64,10 @@
     }
     .nav-item:hover { background: #F1F5F9; color: #0F172A; }
     .nav-item.active { background: #EEF2FF; color: #0A66C2; font-weight: 600; }
-    .sidebar-footer {
-      padding: 1rem 1.25rem;
-      border-top: 1px solid #E2E8F0;
+    .user-menu {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      gap: 0.75rem;
     }
     .user-info { display: flex; align-items: center; gap: 0.75rem; }
     .avatar {
@@ -92,9 +98,15 @@
     .logout-btn:hover { background: #FEE2E2; color: #EF4444; }
     .main-content {
       flex: 1;
-      margin-left: 260px;
       padding: 2rem;
       background: #F8FAFC;
-      min-height: 100vh;
     }
- 
+
+    /* Notification bell styles for light navbar */
+    ::ng-deep .navbar app-notification-bell .bell-button {
+      color: #475569;
+    }
+    ::ng-deep .navbar app-notification-bell .bell-button:hover {
+      background: #F1F5F9;
+    }
+
