@@ -28,7 +28,13 @@
             <app-notification-bell />
             <div class="user-menu">
               <div class="user-info">
-                <div class="avatar">{{ authService.userName().charAt(0).toUpperCase() }}</div>
+                <div class="avatar">
+                  @if (authService.userProfilePicture()) {
+                    <img [src]="authService.userProfilePicture()!" alt="Profile" class="avatar-img" />
+                  } @else {
+                    {{ authService.userName().charAt(0).toUpperCase() }}
+                  }
+                </div>
                 <div class="user-details">
                   <span class="user-name">{{ authService.userName() }}</span>
                   <span class="user-role">Candidate</span>
