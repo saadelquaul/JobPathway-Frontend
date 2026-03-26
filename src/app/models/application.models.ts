@@ -10,9 +10,11 @@ export interface ApplicationResponse {
   status: ApplicationStatus;
   appliedAt: string;
   meetingDate: string;
+  meetingLink?: string;
 }
 
 export interface ApplicationStatusUpdateRequest {
   status: ApplicationStatus;
   meetingDate?: string;
+  meetingLink?: string;
 }
