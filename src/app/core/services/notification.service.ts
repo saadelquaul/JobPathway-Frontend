@@ -58,8 +58,7 @@ export class NotificationService {
     this.unsubscribeNotifications = this.wsService.subscribe<NotificationResponse>(
       `/topic/notifications/${user.id}`,
       (notification) => {
-        console.log('📬 New notification received:', notification);
-
+        
         // Increment unread count
         this.unreadCount.update((count) => count + 1);
 
