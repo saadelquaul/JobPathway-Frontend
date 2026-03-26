@@ -74,25 +74,26 @@
             <h2>Education</h2>
             <button class="btn-primary btn-sm" (click)="openEdModal()">+ Add</button>
           </div>
-          @if (profile()?.educations?.length === 0) {
+          @if (profile()?.educations ) {
+            @for (edu of profile()?.educations; track edu.id) {
+              <div class="list-item">
+                <div class="list-item-content">
+                  <strong>{{ edu.schoolName }}</strong>
+                  <span>{{ edu.degree }} in {{ edu.field }}</span>
+                  <span class="date-range">{{ edu.startDate | date:'MMM yyyy' }} - {{ edu.endDate | date:'MMM yyyy' }}</span>
+                </div>
+                <div class="list-item-actions">
+                  <button class="icon-btn" (click)="openEdModal(edu)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </button>
+                  <button class="icon-btn danger" (click)="confirmDeleteEd(edu.id!)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  </button>
+                </div>
+              </div>
+            }
+          } @else {
             <p class="empty-text">No education entries yet</p>
-          }
-          @for (edu of profile()?.educations; track edu.id) {
-            <div class="list-item">
-              <div class="list-item-content">
-                <strong>{{ edu.schoolName }}</strong>
-                <span>{{ edu.degree }} in {{ edu.field }}</span>
-                <span class="date-range">{{ edu.startDate | date:'MMM yyyy' }} - {{ edu.endDate | date:'MMM yyyy' }}</span>
-              </div>
-              <div class="list-item-actions">
-                <button class="icon-btn" (click)="openEdModal(edu)">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                </button>
-                <button class="icon-btn danger" (click)="confirmDeleteEd(edu.id!)">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                </button>
-              </div>
-            </div>
           }
         </div>
 
@@ -102,28 +103,29 @@
             <h2>Experience</h2>
             <button class="btn-primary btn-sm" (click)="openExpModal()">+ Add</button>
           </div>
-          @if (profile()?.experiences?.length === 0) {
+          @if (profile()?.experiences) {
+            @for (exp of profile()?.experiences; track exp.id) {
+              <div class="list-item">
+                <div class="list-item-content">
+                  <strong>{{ exp.title }} at {{ exp.companyName }}</strong>
+                  <span>{{ exp.location }}</span>
+                  <span class="date-range">{{ exp.startDate | date:'MMM yyyy' }} - {{ exp.isCurrent ? 'Present' : (exp.endDate | date:'MMM yyyy') }}</span>
+                  @if (exp.description) {
+                    <p class="item-desc">{{ exp.description }}</p>
+                  }
+                </div>
+                <div class="list-item-actions">
+                  <button class="icon-btn" (click)="openExpModal(exp)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </button>
+                  <button class="icon-btn danger" (click)="confirmDeleteExp(exp.id!)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  </button>
+                </div>
+              </div>
+            }
+          } @else {
             <p class="empty-text">No experience entries yet</p>
-          }
-          @for (exp of profile()?.experiences; track exp.id) {
-            <div class="list-item">
-              <div class="list-item-content">
-                <strong>{{ exp.title }} at {{ exp.companyName }}</strong>
-                <span>{{ exp.location }}</span>
-                <span class="date-range">{{ exp.startDate | date:'MMM yyyy' }} - {{ exp.isCurrent ? 'Present' : (exp.endDate | date:'MMM yyyy') }}</span>
-                @if (exp.description) {
-                  <p class="item-desc">{{ exp.description }}</p>
-                }
-              </div>
-              <div class="list-item-actions">
-                <button class="icon-btn" (click)="openExpModal(exp)">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                </button>
-                <button class="icon-btn danger" (click)="confirmDeleteExp(exp.id!)">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                </button>
-              </div>
-            </div>
           }
         </div>
 
@@ -133,25 +135,26 @@
             <h2>Skills</h2>
             <button class="btn-primary btn-sm" (click)="openSkillModal()">+ Add</button>
           </div>
-          @if (profile()?.skills?.length === 0) {
+          @if (profile()?.skills) {
+            <div class="skills-grid">
+              @for (skill of profile()?.skills; track skill.id) {
+                <div class="skill-chip">
+                  <span class="chip-name">{{ skill.name }}</span>
+                  <span class="chip-level">{{ formatEnum(skill.level) }}</span>
+                  <div class="chip-actions">
+                    <button class="chip-btn" (click)="openSkillModal(skill)">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    </button>
+                    <button class="chip-btn danger" (click)="confirmDeleteSkill(skill.id!)">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
             <p class="empty-text">No skills added yet</p>
           }
-          <div class="skills-grid">
-            @for (skill of profile()?.skills; track skill.id) {
-              <div class="skill-chip">
-                <span class="chip-name">{{ skill.name }}</span>
-                <span class="chip-level">{{ formatEnum(skill.level) }}</span>
-                <div class="chip-actions">
-                  <button class="chip-btn" (click)="openSkillModal(skill)">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                  </button>
-                  <button class="chip-btn danger" (click)="confirmDeleteSkill(skill.id!)">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                  </button>
-                </div>
-              </div>
-            }
-          </div>
         </div>
       </div>
 
