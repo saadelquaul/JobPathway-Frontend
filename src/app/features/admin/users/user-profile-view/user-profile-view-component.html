@@ -1,0 +1,200 @@
+
+<div class="page-container">
+  @if (loading()) {
+    <div class="loading-container">
+      <app-loading-spinner />
+    </div>
+  } @else if (profile()) {
+    <div class="profile-header">
+      <button class="back-btn" (click)="goBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back to Users
+      </button>
+    </div>
+
+    <div class="profile-content">
+      <!-- Profile Card -->
+      <div class="profile-card">
+        <div class="profile-header-content">
+          @if (profile()!.profilePicture) {
+            <img [src]="profile()!.profilePicture" [alt]="profile()!.name" class="profile-avatar">
+          } @else {
+            <div class="profile-avatar-placeholder">{{ getInitials(profile()!.name) }}</div>
+          }
+          <div class="profile-info">
+            <h1 class="profile-name">{{ profile()!.name }}</h1>
+            <p class="profile-email">{{ profile()!.email }}</p>
+          </div>
+        </div>
+
+        <div class="profile-section">
+          <h3 class="section-title">Summary</h3>
+          @if (profile()!.summary) {
+            <p class="summary-text">{{ profile()!.summary }}</p>
+          } @else {
+            <p class="placeholder-text">Not provided</p>
+          }
+        </div>
+
+        <div class="profile-links">
+          @if (profile()!.resumeUrl) {
+            <a [href]="profile()!.resumeUrl" target="_blank" class="link-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
+              View Resume
+            </a>
+          } @else {
+            <span class="link-btn link-btn-disabled">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
+              Resume Not Available
+            </span>
+          }
+          @if (profile()!.portfolioUrl) {
+            <a [href]="profile()!.portfolioUrl" target="_blank" class="link-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+              </svg>
+              View Portfolio
+            </a>
+          } @else {
+            <span class="link-btn link-btn-disabled">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+              </svg>
+              Portfolio Not Available
+            </span>
+          }
+        </div>
+      </div>
+
+      <!-- Education Section -->
+      <div class="section-card">
+        <h2 class="card-title">Education</h2>
+        @if (profile()!.educations && profile()!.educations.length > 0) {
+          <div class="education-list">
+            @for (edu of profile()!.educations; track edu.id) {
+              <div class="education-item">
+                <div class="education-header">
+                  <h4 class="education-degree">{{ edu.degree }} in {{ edu.field }}</h4>
+                  <span class="education-dates">{{ edu.startDate | date: 'yyyy' }} - {{ edu.endDate | date: 'yyyy' }}</span>
+                </div>
+                <p class="education-school">{{ edu.schoolName }}</p>
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="placeholder-text">No education information added</p>
+        }
+      </div>
+
+      <!-- Experience Section -->
+      <div class="section-card">
+        <h2 class="card-title">Experience</h2>
+        @if (profile()!.experiences && profile()!.experiences.length > 0) {
+          <div class="experience-list">
+            @for (exp of profile()!.experiences; track exp.id) {
+              <div class="experience-item">
+                <div class="experience-header">
+                  <h4 class="experience-title">{{ exp.title }}</h4>
+                  <span class="experience-dates">
+                    {{ exp.startDate | date: 'MMM yyyy' }} - {{ exp.isCurrent ? 'Present' : (exp.endDate | date: 'MMM yyyy') }}
+                  </span>
+                </div>
+                <p class="experience-company">{{ exp.companyName }} • {{ exp.location }}</p>
+                @if (exp.description) {
+                  <p class="experience-description">{{ exp.description }}</p>
+                }
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="placeholder-text">No work experience added</p>
+        }
+      </div>
+
+      <!-- Skills Section -->
+      <div class="section-card">
+        <h2 class="card-title">Skills</h2>
+        @if (profile()!.skills && profile()!.skills.length > 0) {
+          <div class="skills-list">
+            @for (skill of profile()!.skills; track skill.id) {
+              <div class="skill-chip">
+                <span class="skill-name">{{ skill.name }}</span>
+                <span class="skill-level">{{ formatEnum(skill.level) }}</span>
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="placeholder-text">No skills added</p>
+        }
+      </div>
+
+      <!-- Applications Section -->
+      <div class="section-card">
+        <h2 class="card-title">Applications ({{ totalElements() }})</h2>
+        @if (applicationsLoading()) {
+          <div class="loading-container-small">
+            <app-loading-spinner />
+          </div>
+        } @else {
+          @if (applications().length === 0) {
+            <p class="empty-message">No applications submitted yet</p>
+          } @else {
+            <div class="applications-table">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Job Title</th>
+                    <th>Status</th>
+                    <th>Applied Date</th>
+                    <th>Meeting Date</th>
+                    <th>Meeting Link</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (app of applications(); track app.id) {
+                    <tr>
+                      <td>{{ app.jobOfferTitle }}</td>
+                      <td>
+                        <app-status-badge [status]="app.status" />
+                      </td>
+                      <td>{{ app.appliedAt | date: 'MMM d, yyyy' }}</td>
+                      <td>{{ app.meetingDate ? (app.meetingDate | date: 'MMM d, yyyy h:mm a') : '-' }}</td>
+                      <td>
+                        @if (app.meetingLink) {
+                          <a [href]="app.meetingLink" target="_blank" rel="noopener noreferrer" class="link-primary">
+                            Join Meeting
+                          </a>
+                        } @else {
+                          <span>-</span>
+                        }
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+
+            <app-pagination
+              [currentPage]="currentPage()"
+              [totalPages]="totalPages()"
+              [pageSize]="pageSize()"
+              [totalElements]="totalElements()"
+              (pageChange)="onPageChange($event)"
+              (pageSizeChange)="onPageSizeChange($event)"
+            />
+          }
+        }
+      </div>
+    </div>
+  }
+</div>
