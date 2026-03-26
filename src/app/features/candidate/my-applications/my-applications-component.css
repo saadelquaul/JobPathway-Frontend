@@ -46,6 +46,24 @@
       font-size: 0.85rem;
       color: #0A66C2;
       font-weight: 500;
+      flex-wrap: wrap;
+    }
+    .meeting-link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.4rem 0.75rem;
+      background: #0A66C2;
+      color: white;
+      border-radius: 0.375rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s;
+      margin-left: auto;
+    }
+    .meeting-link-btn:hover {
+      background: #084f94;
     }
     .empty-state {
       text-align: center;
