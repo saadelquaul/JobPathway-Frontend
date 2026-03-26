@@ -32,6 +32,12 @@
   gap: 0.75rem;
 }
 
+.brand-logo {
+  height: 45px;
+  width: auto;
+  object-fit: contain;
+}
+
 .logo {
   width: 40px;
   height: 40px;
@@ -314,8 +320,8 @@
   max-width: 400px;
 }
 
-.footer-brand .logo {
-  background: rgba(255, 255, 255, 0.1);
+.footer-brand .brand-logo {
+  filter: brightness(0) invert(1);
 }
 
 .footer-brand .brand-name {
