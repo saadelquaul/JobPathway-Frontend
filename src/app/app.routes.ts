@@ -106,6 +106,20 @@ export const routes: Routes = [
             (m) => m.ManageApplicationsComponent,
           ),
       },
+      {
+        path: 'users',
+        loadComponent: () =>
+          import('./features/admin/users/user-list/user-list-component').then(
+            (m) => m.UserListComponent,
+          ),
+      },
+      {
+        path: 'users/:id',
+        loadComponent: () =>
+          import('./features/admin/users/user-profile-view/user-profile-view-component').then(
+            (m) => m.UserProfileViewComponent,
+          ),
+      },
     ],
   },
   { path: '**', redirectTo: '' },
