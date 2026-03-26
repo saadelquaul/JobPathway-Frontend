@@ -31,6 +31,7 @@ export class ManageApplicationsComponent implements OnInit {
   statuses = Object.values(ApplicationStatus);
   selectedStatus = signal<Record<number, string>>({});
   meetingDates = signal<Record<number, string>>({});
+  meetingLinks = signal<Record<number, string>>({});
   updating = signal<Record<number, boolean>>({});
 
   // Pagination
@@ -61,12 +62,15 @@ export class ManageApplicationsComponent implements OnInit {
 
         const statuses: Record<number, string> = {};
         const dates: Record<number, string> = {};
+        const links: Record<number, string> = {};
         page.content.forEach((a) => {
           statuses[a.id] = a.status;
           if (a.meetingDate) dates[a.id] = a.meetingDate;
+          if (a.meetingLink) links[a.id] = a.meetingLink;
         });
         this.selectedStatus.set(statuses);
         this.meetingDates.set(dates);
+        this.meetingLinks.set(links);
         this.loading.set(false);
       },
       error: () => { this.loading.set(false); },
@@ -92,11 +96,16 @@ export class ManageApplicationsComponent implements OnInit {
     this.meetingDates.update((d) => ({ ...d, [appId]: date }));
   }
 
+  onMeetingLinkChange(appId: number, link: string): void {
+    this.meetingLinks.update((l) => ({ ...l, [appId]: link }));
+  }
+
   updateStatus(app: ApplicationResponse): void {
     const status = this.selectedStatus()[app.id] as ApplicationStatus;
     const meetingDate = status === ApplicationStatus.MEETING_SCHEDULED ? this.meetingDates()[app.id] : undefined;
+    const meetingLink = status === ApplicationStatus.MEETING_SCHEDULED ? this.meetingLinks()[app.id] : undefined;
     this.updating.update((u) => ({ ...u, [app.id]: true }));
-    this.appService.updateApplicationStatus(app.id, { status, meetingDate }).subscribe({
+    this.appService.updateApplicationStatus(app.id, { status, meetingDate, meetingLink }).subscribe({
       next: (updated) => {
         this.applications.update((list) => list.map((a) => (a.id === app.id ? updated : a)));
         this.updating.update((u) => ({ ...u, [app.id]: false }));
