@@ -312,10 +312,4 @@ For production, update to your production API URL.
 - `WS /ws` - WebSocket connection (STOMP over SockJS)
 - Topic: `/topic/notifications/{userId}` - Real-time notifications
 
-## 📝 License
 
-This project is part of the JobPathway recruitment platform.
-
----
-
-Built with ❤️ using Angular 21
